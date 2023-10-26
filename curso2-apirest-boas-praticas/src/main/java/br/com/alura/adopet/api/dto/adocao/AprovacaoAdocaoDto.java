@@ -1,4 +1,4 @@
-package br.com.alura.adopet.api.dto;
+package br.com.alura.adopet.api.dto.adocao;
 
 import jakarta.validation.constraints.NotNull;
 
