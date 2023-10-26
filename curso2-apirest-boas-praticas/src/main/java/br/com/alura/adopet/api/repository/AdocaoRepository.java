@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdocaoRepository extends JpaRepository<Adocao, Long> {
 
-    //verifica se existe na tabela de adocao o id e status que serão passados como parametros
-    boolean existsByPetIdAndStatus(Long idPet, StatusAdocao statusAdocao);
+    boolean existsByPetIdAndStatus(Long idPet, StatusAdocao status);
+
 }
