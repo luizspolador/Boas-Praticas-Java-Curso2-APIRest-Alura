@@ -41,12 +41,7 @@ public class AdocaoService {
 
         validacoes.forEach(v -> v.validarPet(dto)); // percorre cada um dos validadores da lista
 
-        Adocao adocao = new Adocao();
-        adocao.setData(LocalDateTime.now());
-        adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
-        adocao.setPet(pet);
-        adocao.setTutor(tutor);
-        adocao.setMotivo(dto.motivo());
+        Adocao adocao = new Adocao(tutor, pet, dto.motivo());
         adocaoRepository.save(adocao);
 
         String subject = "Solicitação de adoção";
@@ -56,8 +51,7 @@ public class AdocaoService {
 
     public void aprovar(AprovacaoAdocaoDto dto){
         Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
-        adocao.setStatus(StatusAdocao.APROVADO);
-//        adocaoRepository.save(adocao); // jpa ja salva automaticamente
+        adocao.marcarComoAprovado();
 
         String subject = "Adoção aprovada";
         String message = "Parabéns " +adocao.getTutor().getNome() +"!\n\nSua adoção do pet " +adocao.getPet().getNome() +", solicitada em " +adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +", foi aprovada.\nFavor entrar em contato com o abrigo " +adocao.getPet().getAbrigo().getNome() +" para agendar a busca do seu pet.";
@@ -66,9 +60,7 @@ public class AdocaoService {
 
     public void reprovar(ReprovacaoAdocaoDto dto){
         Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
-        adocao.setStatus(StatusAdocao.REPROVADO);
-        adocao.setJustificativaStatus(dto.justificativa());
-//        adocaoRepository.save(adocao);
+        adocao.marcarComoReprovado(dto.justificativa());
 
         String subject = "Adoção reprovada";
         String message = "Olá " +adocao.getTutor().getNome() +"!\n\nInfelizmente sua adoção do pet " +adocao.getPet().getNome() +", solicitada em " +adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +", foi reprovada pelo abrigo " +adocao.getPet().getAbrigo().getNome() +" com a seguinte justificativa: " +adocao.getJustificativaStatus();
